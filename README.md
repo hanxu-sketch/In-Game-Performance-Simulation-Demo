@@ -1,4 +1,4 @@
-# Third Person Hit Feedback Merge
+# In-Game Performance Simulation Demo
 
 This merged project keeps the third-person skill UI scene, model, panel, and button flow as the base, then routes post-hit feedback through the hit-feedback lab style: world-space HP bars, delayed damage bars, shake, and floating damage numbers.
 ## 1. Online Preview (Recommended)
