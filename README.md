@@ -1,8 +1,14 @@
 # Third Person Hit Feedback Merge
 
 This merged project keeps the third-person skill UI scene, model, panel, and button flow as the base, then routes post-hit feedback through the hit-feedback lab style: world-space HP bars, delayed damage bars, shake, and floating damage numbers.
+## 1. Online Preview (Recommended)
 
-## 1. Development Preview
+Open the full interactive demo directly in your browser:
+
+https://hanxu-sketch.github.io/third-person-hit-feedback-merged/share.html
+
+This version is packaged as a single HTML file. No Node.js installation or local server is required.
+## 2. Development Preview
 
 Use this while editing `index.html` or files in `src/`.
 
@@ -18,7 +24,7 @@ http://127.0.0.1:8788/
 
 The page polls the local server and reloads automatically when `index.html`, `src/*`, or the local Three.js file changes.
 
-## 2. Shareable Preview
+## 3. Shareable Preview
 
 Build a single offline HTML file:
 
@@ -34,7 +40,7 @@ share.html
 
 The share file has CSS, app code, and Three.js bundled inside it, so it can be opened directly in Chrome or Edge.
 
-## 3. Company LAN Preview
+## 4. Company LAN Preview
 
 Use this when colleagues need to open the demo from their own computers on the same company network.
 
