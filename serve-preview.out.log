@@ -1,0 +1,10 @@
+
+Company preview server is running:
+  Local: http://127.0.0.1:8790/
+  LAN:   http://10.21.28.157:8790/
+  LAN:   http://172.27.112.1:8790/
+
+Share one LAN URL with colleagues on the same company network.
+If they cannot open it, check Windows Firewall for inbound TCP port 8790.
+Press Ctrl+C to stop.
+

@@ -1,0 +1,17 @@
+{
+  "name": "third-person-demo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "powershell -ExecutionPolicy Bypass -File ./tools/serve-dev.ps1",
+    "share": "powershell -ExecutionPolicy Bypass -File ./tools/build-share.ps1",
+    "preview": "powershell -ExecutionPolicy Bypass -File ./tools/serve-preview.ps1"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

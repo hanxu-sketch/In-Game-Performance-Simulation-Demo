@@ -1,0 +1,629 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>In-Game Performance Simulation Demo</title>
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ════════════════ 左侧配置面板 ════════════════ -->
+  <aside id="panel">
+    <div id="panel-header">
+      <span class="panel-title">In-Game Performance Simulation Demo</span>
+    </div>
+    <div id="panel-body">
+
+      <!-- ── 阶段一：按下触发 ── -->
+      <div class="phase-group" data-phase-group="phase-1">
+        <button class="phase-bar ph1" type="button" aria-expanded="true" aria-controls="phase-content-1">
+          <span class="phase-num">01</span>
+          <span class="phase-name">按下触发</span>
+          <span class="phase-caret" aria-hidden="true"></span>
+        </button>
+        <div class="phase-content" id="phase-content-1">
+
+      <!-- 作用对象 -->
+      <section class="ps">
+        <div class="ps-title">作用对象</div>
+        <div class="pf">
+          <div class="rg tab-rg">
+            <label class="tab"><input type="radio" name="targetType" value="self" checked />自身</label>
+            <label class="tab"><input type="radio" name="targetType" value="single" />单体</label>
+            <label class="tab"><input type="radio" name="targetType" value="aoe" />范围</label>
+          </div>
+        </div>
+
+        <!-- 单体选项 -->
+        <div id="grp-single">
+          <div class="ps-sub">准心样式</div>
+          <div class="pf">
+            <div class="rg">
+              <label><input type="radio" name="reticleStyle" value="circle" checked />圆形</label>
+              <label><input type="radio" name="reticleStyle" value="cross" />十字</label>
+              <label><input type="radio" name="reticleStyle" value="complex" />异形</label>
+            </div>
+          </div>
+          <div class="pf check-row">
+            <label class="cb-label"><input type="checkbox" id="cfg-ch-precast" /><span>准心前摇</span></label>
+          </div>
+          <div class="pf">
+            <label class="cb-label"><input type="checkbox" id="cfg-ch-range" /><span>范围准心</span></label>
+          </div>
+          <div class="pf indent" id="row-ch-r">
+            <label>范围半径 <b id="dv-ch-r">5</b></label>
+            <input type="range" id="cfg-ch-r" data-display="dv-ch-r" min="1" max="12" value="5" step="0.5" />
+          </div>
+          <div class="pf">
+            <label class="cb-label"><input type="checkbox" id="cfg-ammo-on" /><span>弹药量</span></label>
+          </div>
+          <div class="pf indent" id="row-ammo">
+            <label>弹药总数 <b id="dv-ammo">6</b></label>
+            <input type="range" id="cfg-ammo" data-display="dv-ammo" min="1" max="6" value="6" />
+          </div>
+          <div class="pf indent" id="row-ammo-shot">
+            <label>单发消耗 <b id="dv-ammo-shot">1</b></label>
+            <input type="range" id="cfg-ammo-shot" data-display="dv-ammo-shot" min="1" max="6" value="1" />
+          </div>
+          <div class="ps-sub">目标锁定</div>
+          <div class="pf check-row">
+            <label class="cb-label"><input type="checkbox" id="cfg-lock-enemy" checked /><span>锁定敌方</span></label>
+            <label class="cb-label"><input type="checkbox" id="cfg-lock-ally" checked /><span>锁定友方</span></label>
+          </div>
+        </div>
+
+        <!-- 范围选项 -->
+        <div id="grp-aoe">
+          <div class="ps-sub">指示器样式</div>
+          <div class="pf">
+            <div class="rg">
+              <label><input type="radio" name="indShape" value="circle" checked />圆形</label>
+              <label><input type="radio" name="indShape" value="rect" />方形</label>
+              <label><input type="radio" name="indShape" value="fan" />扇形</label>
+              <label><input type="radio" name="indShape" value="parabola" />抛物线</label>
+              <label><input type="radio" name="indShape" value="line" />位移</label>
+              <label><input type="radio" name="indShape" value="selfCircle" />自身圆形</label>
+            </div>
+          </div>
+          <div id="row-ind-r" class="pf">
+            <label>半径 <b id="dv-ind-r">5</b></label>
+            <input type="range" id="cfg-ind-r" data-display="dv-ind-r" min="1" max="15" value="5" step="0.5" />
+          </div>
+          <div id="row-ind-rect">
+            <div class="pf"><label>宽 <b id="dv-ind-w">3</b></label>
+              <input type="range" id="cfg-ind-w" data-display="dv-ind-w" min="1" max="12" value="3" step="0.5" /></div>
+            <div class="pf"><label>长 <b id="dv-ind-l">8</b></label>
+              <input type="range" id="cfg-ind-l" data-display="dv-ind-l" min="2" max="20" value="8" step="0.5" /></div>
+          </div>
+          <div id="row-ind-fan">
+            <div class="pf"><label>角度 <b id="dv-ind-fa">90</b>°</label>
+              <input type="range" id="cfg-ind-fa" data-display="dv-ind-fa" min="20" max="270" value="90" step="5" /></div>
+            <div class="pf"><label>半径 <b id="dv-ind-fr">6</b></label>
+              <input type="range" id="cfg-ind-fr" data-display="dv-ind-fr" min="2" max="15" value="6" step="0.5" /></div>
+          </div>
+          <div id="row-ind-len" class="pf">
+            <label>射程 <b id="dv-ind-len">10</b></label>
+            <input type="range" id="cfg-ind-len" data-display="dv-ind-len" min="3" max="25" value="10" step="0.5" />
+          </div>
+          <div class="pf check-row">
+            <label class="cb-label"><input type="checkbox" id="cfg-target-fb" /><span>目标选中反馈</span></label>
+            <label class="cb-label"><input type="checkbox" id="cfg-colorshift" checked /><span>指示器变色反馈</span></label>
+          </div>
+          <div class="pf color-field">
+            <label>指示器颜色</label>
+            <div class="color-input-row">
+              <input type="color" id="cfg-ind-color" value="#3388ff" data-color-text="cfg-ind-color-text" />
+              <input type="text" class="color-hex-input" id="cfg-ind-color-text" value="#3388ff" data-color-source="cfg-ind-color" spellcheck="false" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 技能读条 -->
+      <section class="ps">
+        <div class="ps-title">技能读条</div>
+        <div class="pf">
+          <div class="rg">
+            <label><input type="radio" name="castBarType" value="none" checked />无</label>
+            <label><input type="radio" name="castBarType" value="chant" />吟唱条</label>
+            <label><input type="radio" name="castBarType" value="charge" />蓄力条</label>
+          </div>
+        </div>
+        <div class="pf" id="row-cast-dur">
+          <label>读条时长 <b id="dv-cast-dur">1.5</b>s</label>
+          <input type="range" id="cfg-cast-dur" data-display="dv-cast-dur" min="0.2" max="5" value="1.5" step="0.1" />
+        </div>
+        <div class="pf" id="row-charge-style">
+          <label>蓄力条形式</label>
+          <div class="rg">
+            <label><input type="radio" name="chargeBarStyle" value="linear" checked />线型</label>
+            <label><input type="radio" name="chargeBarStyle" value="staged" />阶段型</label>
+            <label><input type="radio" name="chargeBarStyle" value="hybrid" />混合型</label>
+          </div>
+        </div>
+      </section>
+        </div>
+      </div>
+
+      <!-- ── 阶段二：松手触发 ── -->
+      <div class="phase-group" data-phase-group="phase-2">
+        <button class="phase-bar ph2" type="button" aria-expanded="true" aria-controls="phase-content-2">
+          <span class="phase-num">02</span>
+          <span class="phase-name">松手触发</span>
+          <span class="phase-caret" aria-hidden="true"></span>
+        </button>
+        <div class="phase-content" id="phase-content-2">
+
+      <!-- 松手效果 -->
+      <section class="ps">
+        <div class="ps-title">松手效果</div>
+        <div class="pf">
+          <div class="rg">
+            <label><input type="radio" name="releaseType" value="cd" checked />直接进CD</label>
+            <label><input type="radio" name="releaseType" value="sustained" />持续状态</label>
+            <label><input type="radio" name="releaseType" value="charged" />充能</label>
+            <label><input type="radio" name="releaseType" value="staged" />多段技能</label>
+          </div>
+        </div>
+
+        <div id="grp-sustained">
+          <div class="pf"><label>持续时长 <b id="dv-sus-dur">3</b>s</label>
+            <input type="range" id="cfg-sus-dur" data-display="dv-sus-dur" min="1" max="10" value="3" step="0.5" /></div>
+          <div class="pf check-row">
+            <label class="cb-label"><input type="checkbox" id="cfg-sus-btn-timer" checked /><span>按钮倒计时</span></label>
+            <label class="cb-label"><input type="checkbox" id="cfg-sus-bar-timer" /><span>倒计时条</span></label>
+            <label class="cb-label" id="opt-sus-ch-ring"><input type="checkbox" id="cfg-sus-ch-ring" /><span>准心倒计时</span></label>
+          </div>
+          <div class="pf"><label class="cb-label"><input type="checkbox" id="cfg-cancel-btn" checked /><span>取消按钮</span></label></div>
+        </div>
+
+        <div id="grp-charged">
+          <div class="pf"><label>充能次数 <b id="dv-charge-n">3</b></label>
+            <input type="range" id="cfg-charge-n" data-display="dv-charge-n" min="2" max="6" value="3" /></div>
+          <div class="pf"><label>使用间隔 <b id="dv-charge-interval">1</b>s</label>
+            <input type="range" id="cfg-charge-interval" data-display="dv-charge-interval" min="0" max="5" value="1" step="0.1" /></div>
+        </div>
+
+        <div id="grp-staged">
+          <div class="pf"><label>技能段数 <b id="dv-stages">3</b></label>
+            <input type="range" id="cfg-stages" data-display="dv-stages" min="2" max="5" value="3" /></div>
+          <div class="pf"><label>段间窗口 <b id="dv-stage-win">1.5</b>s</label>
+            <input type="range" id="cfg-stage-win" data-display="dv-stage-win" min="0.5" max="5" value="1.5" step="0.1" /></div>
+        </div>
+      </section>
+
+      <!-- 释放后反馈 -->
+      <section class="ps" id="sec-post-feedback">
+        <div class="ps-title">释放后反馈</div>
+        <div id="grp-singlefb">
+          <div class="pf check-row">
+            <label class="cb-label"><input type="checkbox" id="cfg-ch-recovery" /><span>准心后摇</span></label>
+          </div>
+          <div class="pf">
+            <label>准心命中反馈</label>
+            <div class="rg">
+              <label><input type="radio" name="hitFb" value="normal" />普通受击</label>
+              <label><input type="radio" name="hitFb" value="crit" />暴击</label>
+              <label><input type="radio" name="hitFb" value="none" checked />无</label>
+            </div>
+          </div>
+        </div>
+        <div id="grp-self-enh-feedback">
+          <div class="pf">
+            <label class="cb-label"><input type="checkbox" id="cfg-enh-attack" /><span>增强普攻</span></label>
+          </div>
+          <div class="pf indent" id="row-enh-attack-count">
+            <label>增强次数 <b id="dv-enh-attack-count">1</b></label>
+            <input type="range" id="cfg-enh-attack-count" data-display="dv-enh-attack-count" min="1" max="5" value="1" step="1" />
+          </div>
+          <div class="pf indent" id="row-enh-attack-unlimited">
+            <label class="cb-label"><input type="checkbox" id="cfg-enh-attack-unlimited" /><span>无限制</span></label>
+          </div>
+          <div class="pf indent" id="row-enh-attack-duration">
+            <label>增强持续 <b id="dv-enh-attack-duration">5</b>s</label>
+            <input type="range" id="cfg-enh-attack-duration" data-display="dv-enh-attack-duration" min="0.5" max="30" value="5" step="0.5" />
+          </div>
+        </div>
+      </section>
+
+      <!-- 公共设定 -->
+      <section class="ps">
+        <div class="ps-title">公共设定</div>
+        <div class="pf"><label>冷却时间 <b id="dv-cd">3</b>s</label>
+          <input type="range" id="cfg-cd" data-display="dv-cd" min="0" max="30" value="3" step="0.5" /></div>
+      </section>
+        </div>
+      </div>
+
+      <!-- ── 阶段三：受击反馈 ── -->
+      <div class="phase-group is-collapsed" data-phase-group="phase-3">
+        <button class="phase-bar ph3" type="button" aria-expanded="false" aria-controls="phase-content-3">
+          <span class="phase-num">03</span>
+          <span class="phase-name">受击反馈</span>
+          <span class="phase-caret" aria-hidden="true"></span>
+        </button>
+        <div class="phase-content" id="phase-content-3">
+
+      <!-- 受击反馈 -->
+      <section class="ps">
+        <div class="ps-title">参数设置</div>
+        <div class="ps-sub">血条反馈</div>
+        <div class="pf">
+          <label>血条数值位置</label>
+          <div class="rg">
+            <label><input type="radio" name="hpValuePos" value="左" checked />左</label>
+            <label><input type="radio" name="hpValuePos" value="上" />上</label>
+            <label><input type="radio" name="hpValuePos" value="内" />内</label>
+            <label><input type="radio" name="hpValuePos" value="右" />右</label>
+          </div>
+        </div>
+        <div class="pf color-field">
+          <label>血条数值颜色</label>
+          <div class="color-input-row">
+            <input type="color" id="cfg-hp-value-color" value="#ffffff" data-color-text="cfg-hp-value-color-text" />
+            <input type="text" class="color-hex-input" id="cfg-hp-value-color-text" value="#ffffff" data-color-source="cfg-hp-value-color" spellcheck="false" />
+          </div>
+        </div>
+        <div class="pf">
+          <label>血条数值大小 <b id="dv-hp-value-size">12</b></label>
+          <input type="range" id="cfg-hp-value-size" data-display="dv-hp-value-size" min="8" max="28" value="12" step="1" />
+        </div>
+        <div class="pf">
+          <label>下降速度 <b id="dv-hp-drop-speed">2</b>s</label>
+          <input type="range" id="cfg-hp-drop-speed" data-display="dv-hp-drop-speed" min="0.5" max="8" value="2" step="0.5" />
+        </div>
+        <div class="pf color-field">
+          <label>扣除闪色</label>
+          <div class="color-input-row">
+            <input type="color" id="cfg-hp-drop-color" value="#ff6666" data-color-text="cfg-hp-drop-color-text" />
+            <input type="text" class="color-hex-input" id="cfg-hp-drop-color-text" value="#ff6666" data-color-source="cfg-hp-drop-color" spellcheck="false" />
+          </div>
+        </div>
+        <div class="pf">
+          <label>抖动强度 <b id="dv-hit-shake">4</b>px</label>
+          <input type="range" id="cfg-hit-shake" data-display="dv-hit-shake" min="0" max="12" value="4" step="1" />
+        </div>
+        <div class="pf">
+          <label>血量扣除 <b id="dv-hit-damage">10</b></label>
+          <input type="range" id="cfg-hit-damage" data-display="dv-hit-damage" min="1" max="30" value="10" step="1" />
+        </div>
+        <div class="pf">
+          <label class="cb-label"><input type="checkbox" id="cfg-target-hp-refill" checked /><span>目标血量自动回复</span></label>
+        </div>
+
+        <div class="ps-sub">伤害跳字</div>
+        <div class="pf">
+          <label>跳字位置</label>
+          <div class="rg">
+            <label><input type="radio" name="floatValuePos" value="上" />上</label>
+            <label><input type="radio" name="floatValuePos" value="下" />下</label>
+            <label><input type="radio" name="floatValuePos" value="左" />左</label>
+            <label><input type="radio" name="floatValuePos" value="右" checked />右</label>
+          </div>
+        </div>
+        <div class="pf color-field">
+          <label>普通颜色</label>
+          <div class="color-input-row">
+            <input type="color" id="cfg-float-normal-color" value="#ffffff" data-color-text="cfg-float-normal-color-text" />
+            <input type="text" class="color-hex-input" id="cfg-float-normal-color-text" value="#ffffff" data-color-source="cfg-float-normal-color" spellcheck="false" />
+          </div>
+        </div>
+        <div class="pf color-field">
+          <label>暴击颜色</label>
+          <div class="color-input-row">
+            <input type="color" id="cfg-float-critical-color" value="#ffcc00" data-color-text="cfg-float-critical-color-text" />
+            <input type="text" class="color-hex-input" id="cfg-float-critical-color-text" value="#ffcc00" data-color-source="cfg-float-critical-color" spellcheck="false" />
+          </div>
+        </div>
+        <div class="pf color-field">
+          <label>治疗颜色</label>
+          <div class="color-input-row">
+            <input type="color" id="cfg-float-heal-color" value="#00ff88" data-color-text="cfg-float-heal-color-text" />
+            <input type="text" class="color-hex-input" id="cfg-float-heal-color-text" value="#00ff88" data-color-source="cfg-float-heal-color" spellcheck="false" />
+          </div>
+        </div>
+        <div class="pf">
+          <label>持续时间 <b id="dv-float-duration">1.2</b>s</label>
+          <input type="range" id="cfg-float-duration" data-display="dv-float-duration" min="0.3" max="3" value="1.2" step="0.1" />
+        </div>
+        <div class="pf">
+          <label>基础字号 <b id="dv-float-size">18</b></label>
+          <input type="range" id="cfg-float-size" data-display="dv-float-size" min="12" max="32" value="18" step="1" />
+        </div>
+
+        <div class="ps-sub">动效设计</div>
+        <div class="pf">
+          <label>整套动效预设</label>
+          <select id="cfg-float-preset">
+            <option value="custom">自定义</option>
+            <option value="heavy" selected>重击</option>
+            <option value="flowing">流转连击</option>
+            <option value="crispy">清脆弹出</option>
+            <option value="bouncy">弹性反馈</option>
+          </select>
+        </div>
+        <div class="pf">
+          <label>速度变化曲线</label>
+          <select id="cfg-speed-curve">
+            <option value="auto" selected>跟随整套预设</option>
+            <option value="burst">爆发</option>
+            <option value="smooth">平滑</option>
+            <option value="crisp">清脆</option>
+            <option value="bounce">回弹</option>
+            <option value="custom">自定义</option>
+          </select>
+        </div>
+        <div class="curve-editor-wrap">
+          <canvas id="curve-speed" width="220" height="128"></canvas>
+          <div class="curve-editor-hint">自定义模式下可拖拽曲线点与手柄</div>
+        </div>
+        <div class="curve-grid" id="grp-speed-custom">
+          <div class="pf"><label>速度点 1 <b id="dv-speed-v1">1</b></label><input type="range" id="cfg-speed-v1" data-display="dv-speed-v1" min="0" max="2" value="1" step="0.05" /></div>
+          <div class="pf"><label>速度点 2 <b id="dv-speed-v2">0.2</b></label><input type="range" id="cfg-speed-v2" data-display="dv-speed-v2" min="0" max="2" value="0.2" step="0.05" /></div>
+          <div class="pf"><label>速度点 3 <b id="dv-speed-v3">0</b></label><input type="range" id="cfg-speed-v3" data-display="dv-speed-v3" min="0" max="2" value="0" step="0.05" /></div>
+        </div>
+
+        <div class="pf" id="grp-direction-grid">
+          <label>位移初始方向</label>
+          <div class="direction-grid">
+            <label><input type="radio" name="floatDirectionPreset" value="左上" />↖</label>
+            <label><input type="radio" name="floatDirectionPreset" value="上" checked />↑</label>
+            <label><input type="radio" name="floatDirectionPreset" value="右上" />↗</label>
+            <label><input type="radio" name="floatDirectionPreset" value="左" />←</label>
+            <label><input type="radio" name="floatDirectionPreset" value="中心" />●</label>
+            <label><input type="radio" name="floatDirectionPreset" value="右" />→</label>
+            <label><input type="radio" name="floatDirectionPreset" value="左下" />↙</label>
+            <label><input type="radio" name="floatDirectionPreset" value="下" />↓</label>
+            <label><input type="radio" name="floatDirectionPreset" value="右下" />↘</label>
+          </div>
+        </div>
+        <div class="pf">
+          <label>初速度 <b id="dv-motion-speed">80</b></label>
+          <input type="range" id="cfg-motion-speed" data-display="dv-motion-speed" min="10" max="200" value="80" step="1" />
+        </div>
+        <div class="pf">
+          <label>重力感 <b id="dv-motion-gravity">2</b></label>
+          <input type="range" id="cfg-motion-gravity" data-display="dv-motion-gravity" min="0" max="5" value="2" step="0.05" />
+        </div>
+        <div class="pf">
+          <label>堆叠方式</label>
+          <div class="rg">
+            <label><input type="radio" name="floatStacking" value="重叠" checked />重叠</label>
+            <label><input type="radio" name="floatStacking" value="排队" />排队</label>
+          </div>
+        </div>
+        <div class="pf" id="row-queue-gap">
+          <label>排队间距 <b id="dv-queue-gap">8</b></label>
+          <input type="range" id="cfg-queue-gap" data-display="dv-queue-gap" min="0" max="30" value="8" step="1" />
+        </div>
+
+        <div class="pf">
+          <label>缩放变化曲线</label>
+          <select id="cfg-scale-curve">
+            <option value="auto">跟随整套预设</option>
+            <option value="burst">爆发</option>
+            <option value="smooth" selected>平滑</option>
+            <option value="crisp">清脆</option>
+            <option value="bounce">回弹</option>
+            <option value="custom">自定义</option>
+          </select>
+        </div>
+        <div class="curve-editor-wrap">
+          <canvas id="curve-scale" width="220" height="128"></canvas>
+          <div class="curve-editor-hint">自定义模式下可拖拽曲线点与手柄</div>
+        </div>
+        <div class="curve-grid" id="grp-scale-custom">
+          <div class="pf"><label>缩放点 1 <b id="dv-scale-v1">0.5</b></label><input type="range" id="cfg-scale-v1" data-display="dv-scale-v1" min="0" max="3" value="0.5" step="0.05" /></div>
+          <div class="pf"><label>缩放点 2 <b id="dv-scale-v2">2.5</b></label><input type="range" id="cfg-scale-v2" data-display="dv-scale-v2" min="0" max="3" value="2.5" step="0.05" /></div>
+          <div class="pf"><label>缩放点 3 <b id="dv-scale-v3">1</b></label><input type="range" id="cfg-scale-v3" data-display="dv-scale-v3" min="0" max="3" value="1" step="0.05" /></div>
+        </div>
+        <div class="pf">
+          <label>动画缩放强度 <b id="dv-scale-max">1</b></label>
+          <input type="range" id="cfg-scale-max" data-display="dv-scale-max" min="0.5" max="3" value="1" step="0.05" />
+        </div>
+
+        <div class="pf">
+          <label>透明度变化曲线</label>
+          <select id="cfg-alpha-curve">
+            <option value="auto" selected>跟随整套预设</option>
+            <option value="burst">爆发</option>
+            <option value="smooth">平滑</option>
+            <option value="crisp">清脆</option>
+            <option value="bounce">回弹</option>
+            <option value="custom">自定义</option>
+          </select>
+        </div>
+        <div class="curve-editor-wrap">
+          <canvas id="curve-alpha" width="220" height="128"></canvas>
+          <div class="curve-editor-hint">自定义模式下可拖拽曲线点与手柄</div>
+        </div>
+        <div class="curve-grid" id="grp-alpha-custom">
+          <div class="pf"><label>透明点 1 <b id="dv-alpha-v1">1</b></label><input type="range" id="cfg-alpha-v1" data-display="dv-alpha-v1" min="0" max="1" value="1" step="0.05" /></div>
+          <div class="pf"><label>透明点 2 <b id="dv-alpha-v2">1</b></label><input type="range" id="cfg-alpha-v2" data-display="dv-alpha-v2" min="0" max="1" value="1" step="0.05" /></div>
+          <div class="pf"><label>透明点 3 <b id="dv-alpha-v3">0</b></label><input type="range" id="cfg-alpha-v3" data-display="dv-alpha-v3" min="0" max="1" value="0" step="0.05" /></div>
+        </div>
+      </section>
+        </div>
+      </div>
+
+      <div id="panel-footer">
+        <button id="btn-trigger">▶ 预览技能 <kbd>Q</kbd></button>
+        <button id="btn-cancel" class="hidden">✕ 取消预览</button>
+      </div>
+
+    </div><!-- /panel-body -->
+  </aside>
+
+  <!-- ════════════════ 右侧视口 ════════════════ -->
+  <main id="viewport">
+    <canvas id="c"></canvas>
+
+    <div id="hud">
+      <!-- 状态徽章 -->
+      <div id="state-badge" class="s-idle">待机</div>
+
+      <!-- 屏幕中心常驻准心点 -->
+      <div id="center-dot"></div>
+
+      <!-- 单体：准心覆盖层（固定屏幕中心） -->
+      <div id="crosshair" class="hidden">
+        <div id="ch-svg"></div>
+        <div id="ch-hit-feedback" class="hidden"></div>
+        <div id="ch-range-ring" class="hidden"></div>
+        <svg id="ch-cd-ring" class="hidden" width="70" height="70" viewBox="0 0 70 70">
+          <path id="ch-cd-track" d="M35 5 A30 30 0 1 0 35 65 A30 30 0 1 0 35 5" fill="none"
+            stroke="rgba(32,180,229,0.24)" stroke-width="3"/>
+          <path id="ch-cd-arc" d="M35 5 A30 30 0 1 0 35 65 A30 30 0 1 0 35 5" fill="none"
+            stroke="rgba(32,180,229,0.98)" stroke-width="3" stroke-dasharray="188.5"
+            stroke-dashoffset="0" stroke-linecap="round"/>
+        </svg>
+        <!-- 弹药量（准心下方） -->
+        <div id="ch-ammo" class="hidden" aria-label="ammo"></div>
+      </div>
+
+      <!-- 目标选中高亮环 -->
+      <div id="target-hl" class="hidden"></div>
+
+      <!-- 浮动文字 -->
+      <div id="float-zone"></div>
+      <div id="floatingDamageContainer"></div>
+      <div id="worldBarsContainer">
+        <div id="playerWorldBar" class="world-bar-wrap hp-left player-hud-bar">
+          <div id="playerWorldBarShakeWrap" class="world-bar-inner">
+            <span class="world-bar-hp" id="playerWorldBarHp">100/100</span>
+            <div class="world-bar-back"></div>
+            <div id="playerWorldBarGhost" class="world-bar-ghost"></div>
+            <div id="playerWorldBarFill" class="world-bar-fill"></div>
+          </div>
+        </div>
+        <div id="enemyWorldBarsContainer"></div>
+      </div>
+      <!-- 底部右：技能按钮区域 -->
+      <div id="skill-area">
+
+        <!-- 读条区域（按钮上方） -->
+        <div id="cast-bars-wrap" class="hidden">
+          <div id="cast-chant" class="cbar hidden">
+            <div class="cbar-lbl">吟唱</div>
+            <div class="cbar-track"><div class="cbar-fill" id="chant-fill"></div></div>
+          </div>
+          <div id="cast-charge" class="cbar hidden">
+            <svg id="charge-arc-svg" viewBox="0 0 96 160" aria-hidden="true">
+              <path id="charge-arc-track" d="M51 131 A72 72 0 0 0 51 29" pathLength="100" />
+              <path id="charge-fill" d="M51 131 A72 72 0 0 0 51 29" pathLength="100" />
+              <circle id="charge-node-mid" class="charge-node" cx="72" cy="80" r="3.2" />
+              <circle id="charge-node-end" class="charge-node" cx="51" cy="29" r="3.4" />
+            </svg>
+            <div id="charge-full-flare"></div>
+          </div>
+        </div>
+
+        <!-- 持续状态倒计时条 -->
+        <div id="sustain-bar" class="hidden">
+          <div id="sustain-lbl">持续中</div>
+          <div id="sustain-track"><div id="sustain-fill"></div></div>
+        </div>
+
+        <!-- 多段指示 -->
+        <div id="stage-ind" class="hidden">
+          <span id="stage-cur">1</span><span class="sep">/</span><span id="stage-tot">3</span>
+        </div>
+
+        <!-- 普攻 + 技能 横排 -->
+        <div id="action-btns">
+          <!-- 主技能按钮 -->
+          <div id="skill-stack">
+            <div id="skill-button-frame">
+              <button id="skill-cancel" class="hidden">✕ 取消</button>
+              <button id="skill-btn" class="s-idle" type="button" aria-label="主技能">
+                <div id="skill-icon"><img src="assets/ui/skill-button.png" alt="" draggable="false" /></div>
+                <div class="cd-mask" id="btn-cd-mask"></div>
+                <div class="cd-txt"  id="btn-cd-txt"></div>
+                <svg id="btn-sustain-ring" class="hidden" viewBox="0 0 72 72" aria-hidden="true">
+                  <path class="btn-ring-track" d="M36 3 A33 33 0 1 0 36 69 A33 33 0 1 0 36 3" fill="none" />
+                  <path id="btn-sustain-arc" class="btn-ring-arc" d="M36 3 A33 33 0 1 0 36 69 A33 33 0 1 0 36 3" fill="none" />
+                </svg>
+                <svg id="btn-charge-ring" class="hidden" viewBox="0 0 72 72" aria-hidden="true">
+                  <path class="btn-charge-track" d="M36 69 A33 33 0 1 1 36 3 A33 33 0 1 1 36 69" fill="none" />
+                  <path id="btn-charge-arc" class="btn-charge-arc" d="M36 69 A33 33 0 1 1 36 3 A33 33 0 1 1 36 69" fill="none" />
+                </svg>
+                <div id="charge-dots" class="hidden"></div>
+                <div class="slot-key">Q</div>
+              </button>
+            </div>
+            <div class="action-label">技能</div>
+          </div>
+
+          <!-- 普通攻击按钮 -->
+          <div id="attack-stack">
+            <div id="attack-button-frame">
+              <button id="attack-btn" type="button" title="普通攻击" aria-label="普通攻击">
+                <div id="attack-icon"><img src="assets/ui/attack-basic.png" alt="" draggable="false" /></div>
+                <div class="slot-key">E</div>
+              </button>
+            </div>
+            <div class="action-label">普攻</div>
+          </div>
+        </div>
+
+        <!-- 技能倒计时读条（充能/多段/CD 等释放后状态下显示） -->
+        <div id="skill-cd-bar" class="hidden">
+          <div id="skill-cd-fill"></div>
+          <div id="skill-cd-lbl">倒计时</div>
+        </div>
+
+      </div><!-- /skill-area -->
+
+    </div><!-- /hud -->
+  </main>
+
+</div>
+<div id="boot-error" style="display:none;position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:9999;max-width:min(560px,calc(100vw - 32px));padding:10px 14px;border:1px solid rgba(255,130,80,.55);border-radius:8px;background:rgba(30,12,8,.94);color:#ffd8c8;font:13px/1.5 system-ui,'Microsoft YaHei',sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);"></div>
+<script>
+  window.__TPD_READY__ = false;
+  const showBootError = (message) => {
+    const el = document.getElementById('boot-error');
+    if (!el || window.__TPD_READY__) return;
+    el.style.display = 'block';
+    el.textContent = message;
+  };
+  window.addEventListener('error', (event) => {
+    showBootError('场景脚本启动失败：' + (event.message || '请检查浏览器 Console 的第一条红色报错。'));
+  });
+  window.addEventListener('unhandledrejection', (event) => {
+    showBootError('场景脚本异步错误：' + (event.reason?.message || event.reason || '未知错误'));
+  });
+  (() => {
+    const isLocalPreview = location.hostname === '127.0.0.1' || location.hostname === 'localhost';
+    if (!isLocalPreview || !/^https?:$/.test(location.protocol)) return;
+    let lastVersion = '';
+    const checkVersion = async () => {
+      try {
+        const response = await fetch('/__version', { cache: 'no-store' });
+        if (!response.ok) return;
+        const version = await response.text();
+        if (lastVersion && version && version !== lastVersion) location.reload();
+        lastVersion = version;
+      } catch {
+        // A normal static server will not expose /__version; only tools/serve-dev.ps1 does.
+      }
+    };
+    checkVersion();
+    setInterval(checkVersion, 600);
+  })();
+  setTimeout(() => {
+    showBootError('场景脚本没有启动。请用本地 HTTP 服务打开项目根目录的 index.html，不要直接用 file:// 打开。');
+  }, 1500);
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./node_modules/three/build/three.module.js"
+  }
+}
+</script>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
