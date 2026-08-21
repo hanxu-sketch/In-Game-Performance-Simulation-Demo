@@ -5,7 +5,7 @@ This merged project keeps the third-person skill UI scene, model, panel, and but
 
 Open the full interactive demo directly in your browser:
 
-https://hanxu-sketch.github.io/third-person-hit-feedback-merged/share.html
+https://hanxu-sketch.github.io/in-game-performance-simulation-demo/share.html
 
 This version is packaged as a single HTML file. No Node.js installation or local server is required.
 ## 2. Development Preview
